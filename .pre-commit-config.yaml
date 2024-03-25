@@ -1,0 +1,12 @@
+repos:
+- repo: https://github.com/hlecco/pre-commit-check-name
+  rev: v0.1.0
+  hooks:
+  - id: check-name-regex 
+    name: Scripts must reference a JIRA ticket
+    args: ['-r', '^JIRA-\d+-.+.sql$',
+           '-d', 'scripts']
+  - id: check-name-regex 
+    name: Do not allow file creation in deploy directory
+    args: ['-r', '^$',
+           '-d', 'deploy']
