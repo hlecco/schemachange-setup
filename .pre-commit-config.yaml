@@ -4,7 +4,7 @@ repos:
   hooks:
   - id: check-name-regex 
     name: Scripts must reference a JIRA ticket
-    args: ['-r', '^JIRA-\d+-.+.sql$',
+    args: ['-r', '^JIRA-\d+-(R|A|V)-.+\.sql$',
            '-d', 'scripts']
   - id: check-name-regex 
     name: Do not allow file creation in deploy directory
