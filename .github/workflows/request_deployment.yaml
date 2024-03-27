@@ -28,7 +28,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Create new branch
-        run: git checkout -b deploy/${{ github.job }}
+        run: git checkout -b deploy/${{ github.run_id }}
       - name: Copy files to deploy directory
         run: python -m tools.copy_scripts_to_deploy ${{ inputs.issue }}
       - name: Stage changed files
@@ -38,10 +38,10 @@ jobs:
           git commit
           -m "deploy: JIRA issue ${{ inputs.issue }} to ${{ inputs.environment }}"
       - name: Push commited changes
-        run: git push -u origin deploy/${{ github.job }}
+        run: git push -u origin deploy/${{ github.run_id }}
       - name: Create PR
         run: >
-          gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.job }}
+          gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.run_id }}
           --fill
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
