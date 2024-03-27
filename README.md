@@ -14,4 +14,4 @@ This repository is a mock for a Snowflake setup using CI/CD routines and schemac
 
 Always branch out from the `main` branch.
 Scripts must be created inside the `scripts/` directory.
-Never edit the `deploy` directory manually.
+Never edit the `deploy` directory manually, use the appropriate workflow for it.
