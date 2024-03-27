@@ -43,3 +43,5 @@ jobs:
         run: >
           gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.job }}
           --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
