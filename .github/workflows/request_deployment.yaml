@@ -1,0 +1,36 @@
+name: Request deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Environment to include features to
+        options:
+          - prod
+          - dev
+        required: true
+      issue:
+        type: number
+        description: JIRA issue that identifies the scripts to be included
+
+permissions:
+  pull-requests: write
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create new branch
+        run: git checkout -b deploy/${{ github.job }}
+      - name: Copy files to deploy directory
+        run: python -m tools.copy_scripts_to_deploy ${{ inputs.issue }}
+      - name: Commit changes
+        run: git commit -a -m "deploy: JIRA issue ${{ inputs.issue }} to ${{ inputs.environment }}"
+      - name: Push commited changes
+        run: git push -u origin deploy/${{ github.job }}
+      - name: Create PR
+        run: >
+          gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.job }}
+          --fill
