@@ -12,15 +12,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create Pull Request for dev branch
+      - name: Create Pull Request for dev branch if it does not exist
         run: >
+          test -n "$(gh pr list -B dev -H main)" ||
           gh pr create -B dev -H main
           --title 'Merge main into dev'
           --body 'Created by GitHub Actions'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create Pull Request for prod branch
+      - name: Create Pull Request for prod branch if it does not exist
         run: >
+          test -n "$(gh pr list -B prod -H main)" ||
           gh pr create -B prod -H main
           --title 'Merge main into prod'
           --body 'Created by GitHub Actions'
