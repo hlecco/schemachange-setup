@@ -15,6 +15,7 @@ on:
 
 permissions:
   pull-requests: write
+  contents: write
 
 jobs:
   create-pull-request:
@@ -22,21 +23,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create new branch
-        run: git checkout -b deploy/${{ github.job }}
-      - name: Copy files to deploy directory
-        run: python -m tools.copy_scripts_to_deploy ${{ inputs.issue }}
+        with:
+          ref: ${{ inputs.environment }}
       - name: Config git credentials
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Create new branch
+        run: git checkout -b deploy/${{ github.run_id }}
+      - name: Copy files to deploy directory
+        run: python -m tools.copy_scripts_to_deploy ${{ inputs.issue }}
+      - name: Stage changed files
+        run: git add deploy
       - name: Commit changes
         run: >
-          git commit -a
+          git commit
           -m "deploy: JIRA issue ${{ inputs.issue }} to ${{ inputs.environment }}"
       - name: Push commited changes
-        run: git push -u origin deploy/${{ github.job }}
+        run: git push -u origin deploy/${{ github.run_id }}
       - name: Create PR
         run: >
-          gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.job }}
-          --fill
+          gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.run_id }}
+          --title 'deploy | JIRA-${{ inputs.issue }} | ${{ inputs.environment }}'
+          --body 'Created by GitHub Actions'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
