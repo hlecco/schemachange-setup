@@ -42,6 +42,7 @@ jobs:
       - name: Create PR
         run: >
           gh pr create -B ${{ inputs.environment }} -H deploy/${{ github.run_id }}
-          --fill
+          --title 'deploy | JIRA-${{ inputs.issue }} | ${{ inputs.environment }}'
+          --body 'Created by GitHub Actions'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
