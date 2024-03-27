@@ -27,7 +27,7 @@ jobs:
       - name: Copy files to deploy directory
         run: python -m tools.copy_scripts_to_deploy ${{ inputs.issue }}
       - name: Commit changes
-        run: git commit -a -m "deploy: JIRA issue ${{ inputs.issue }} to ${{ inputs.environment }}"
+        run: git commit -a -m 'deploy: JIRA issue ${{ inputs.issue }} to ${{ inputs.environment }}'
       - name: Push commited changes
         run: git push -u origin deploy/${{ github.job }}
       - name: Create PR
